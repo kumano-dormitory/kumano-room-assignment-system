@@ -1,0 +1,181 @@
+ table, th, td {
+      border: 1px solid #aaa;
+      border-collapse: collapse;
+      padding: 5px;
+      text-align: center;
+    }
+    input {
+      width: 50px;
+      text-align: center;
+    }
+    
+  
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  padding: 30px;
+}
+
+h2, h3 {
+  color: #333;
+}
+
+table {
+  margin-top: 10px;
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+  color: #444;
+}
+
+input[type="number"] {
+  width: 50px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="number"]:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
+  outline: none;
+}
+
+input.invalid {
+  background-color: #ffe5e5;
+  border-color: #e74c3c;
+}
+
+button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #357ab8;
+}
+
+#result-area {
+  background-color: #fff;
+  font-family: monospace;
+  margin-top: 15px;
+  white-space: pre-wrap;
+}
+
+/* スロット設定セクション全体 */
+#slot-settings {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* フォーム内フィールドセットの調整 */
+#slots-form fieldset {
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* グリッドレイアウト */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* 各入力のラベル調整 */
+.slot-grid label {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-size: 0.9rem;
+}
+
+/* ブロック名部分 */
+.block-name {
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 数値入力欄 */
+.slot-grid input[type="number"] {
+  padding: 0.25rem;
+  border: 1px solid #bbb;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+/* 開始ボタン */
+#slots-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background: #4a90e2;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#slots-form button:hover {
+  background: #357ab8;
+}
+
+.log-box {
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  padding: 10px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 0.9em;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* レイアウト全体を左右に分ける */
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px; /* 左右の間隔 */
+  margin-top: 20px;
+}
+
+/* 左側：表（テーブル） */
+#left-panel {
+  flex: 2;
+}
+
+/* 右側：確定結果ログ */
+#right-panel {
+  flex: 1;
+  border: 1px solid #aaa;
+  padding: 10px;
+  background-color: #f9f9f9;
+  height: fit-content;
+  white-space: pre-wrap; /* 改行を保持 */
+}

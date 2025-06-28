@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>部屋決めドラフト</title>
+  <link rel="stylesheet" href="draft_style2.css" type="text/css">
+</head>
+<body>
+  <h2>部屋決めドラフト</h2>
+  <p>巡目: <span id="round">1</span></p> <!--巡目の数字にroundタグ付けて管理-->
+  <section id="slot-settings"><!--各ブロックの枠数を決定する部分-->
+    
+  <form id="slots-form">
+    <fieldset>
+      <legend>各ブロックの枠数設定</legend>
+      <div class="slot-grid">
+        <label>
+          <span class="block-name">A1</span>
+          <input type="number" name="A1" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">A2</span>
+          <input type="number" name="A2" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">A3</span>
+          <input type="number" name="A3" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">A4</span>
+          <input type="number" name="A4" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">B12</span>
+          <input type="number" name="B12" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">B3</span>
+          <input type="number" name="B3" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">B4</span>
+          <input type="number" name="B3" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">C12</span>
+          <input type="number" name="C12" min="0" value="0">
+        </label>
+        <label>
+          <span class="block-name">C34</span>
+          <input type="number" name="C34" min="0" value="0">
+        </label>
+        
+      </div>
+      <button type="button" onclick="startDraft()">ドラフト開始</button> <!--クリックしたらstartDraftが動くボタンを作る-->
+    </fieldset>
+  </form>
+</section>
+<section id="csv-upload-section">
+  <fieldset>
+    <legend>新入寮生CSV読み込み</legend>
+    <label for="csv-upload">CSVファイルを選択してください：</label>
+    <input type="file" id="csv-upload" accept=".csv" onchange="handleCSVUpload(event)">
+  </fieldset>
+</section>
+
+<div class="main-container">
+  <div id="left-panel">
+  <table id="draft-table">
+    <thead>
+      <tr>
+        <th>ブロック名</th>
+        <th>指名1</th>
+        <th>指名2</th>
+        <th>指名3</th>
+        <th>指名4</th>
+        <th>指名5</th>
+        <th>指名6</th>
+      </tr>
+    </thead>
+    <tbody id="input-rows"></tbody><!--表の横をつくる-->
+  </table>
+  </div>
+  <div id="right-panel">
+    <h3>確定結果</h3>
+    <pre id="result-area"></pre>
+
+    <h3>ログ</h3>
+    <div id="console-log-area" class="log-box"></div>
+  </div>
+</div>
+
+  <br>
+  <button onclick="confirmInputs()">確定</button>
+  <button onclick="resetInputs()">リセット</button>
+  <button onclick="saveCurrentState()">状態保存</button>
+  <button onclick="restorePreviousState()">やり直し</button>
+
+<!-- <input type="file" id="csv-upload" accept=".csv">-->
+<!-- <button onclick="handleCSVImport()">CSV読み込み</button> -->
+  
+
+  <!-- 最後に追加するグローバル変数 -->
+<script>
+  let backupState = {
+    round: 1,
+    inputs: {},
+    wakuDict: {}
+  };
+</script>
+
+
+    <!-- ==== 色の割り当て ====-->
+  <script src="assign_colors.js"></script>
+  <script>
+  function resetInputs() {
+      const cells = document.querySelectorAll("td"); //全てのセルをhtmlとして取得
+      cells.forEach(cell => {
+        const input = cell.querySelector("input"); //1個のセルについて、「入力」として要素を取得
+        const span = cell.querySelector("span"); //1個のセルについて、「確定」として要素を取得
+
+        if (input) {
+          input.value = ""; //セルが入力モードであれば、そこを空にする
+        } else if (span) {
+          const newInput = document.createElement("input"); //セルが確定モードであれば、newInputモードにする
+          newInput.type = "number"; //newInputモードは数字で、空
+          newInput.placeholder = "";
+          newInput.addEventListener("input", assignColors); //newInputに対して、inputタグをつけて「着色」を適用
+          cell.removeChild(span); //セルからspanタグをとる(確定モードを解除)
+          cell.appendChild(newInput); //セルにnewInputタグを付ける(新しい入力モードをつける)
+        }
+      });
+
+      document.getElementById("round").textContent = "1"; //roundタグの要素の中身を「1」とする
+      assignColors(); //「着色」する
+    }
+
+    // ==== 初期色反映 ====
+    document.addEventListener("DOMContentLoaded", assignColors); //全体に対して
+  </script>
+
+    <!--// ==== 表を get_dict に基づいて再描画 ====-->
+  <script src="render_table_from_get_dict.js"></script>
+
+  <script src="import_csv.js"></script>
+  <script src="csv_loader.js"></script>
+  <script src="apply_waku_dict.js"></script> 
+
+  <script src="start_draft.js"></script> 
+
+    <!-- ==== 確定結果をテキスト表示 ====--> 
+  <script src="show_results.js"></script>
+
+    <!--じゃんけん勝者処理-->
+  <script src="handle_conflicts.js"></script>
+
+    <!--サーバーへの情報送信-->
+  <script src="send_to_server.js"></script>
+
+  <script src="enable_reentry.js"></script>
+
+    <!--確定ボタンの処理-->
+  <script src="confirm_input.js"></script>
+  <script src="save_current_state.js"></script>
+  <script src="render_table_from_get_dict.js"></script>
+  <!-- 最後に読み込むこと！ -->
+  <script src="init_table.js"></script>
+
+  <script>
+    (function () {
+  const originalLog = console.log; // 元のconsole.logを保存
+  const logArea = document.getElementById("console-log-area");
+
+  console.log = function (...args) {
+    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(" ");
+    
+    // HTMLに追加
+    if (logArea) {
+      const div = document.createElement("div");
+      div.textContent = message;
+      logArea.appendChild(div);
+      logArea.scrollTop = logArea.scrollHeight; // 自動スクロール
+    }
+
+    // 元のconsole.logも実行
+    originalLog.apply(console, args);
+  };
+})();
+  </script>
+
+  
+</body>
+</html>
