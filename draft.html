@@ -88,6 +88,11 @@
     <h3>ログ</h3>
     <div id="console-log-area" class="log-box"></div>
   </div>
+
+<div id="overlay" style="display:none;">
+  <div id="picker"></div>
+</div>
+
 </div>
 
   <br>
@@ -138,9 +143,10 @@
     // ==== 初期色反映 ====
     document.addEventListener("DOMContentLoaded", assignColors); //全体に対して
   </script>
-
+  <script src="number_picker.js"></script>
+  <script src="create_number_picker_cell.js"></script>
     <!--// ==== 表を get_dict に基づいて再描画 ====-->
-  <script src="render_table_from_get_dict.js"></script>
+  <script src="render_table_from_get_dict.js"></script>  
 
   <script src="import_csv.js"></script>
   <script src="csv_loader.js"></script>
