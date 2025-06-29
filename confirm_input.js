@@ -52,9 +52,14 @@ function confirmInputs() {  //確定ボタンが押されたときに動かさ�
     });
     draftData[block] = values;  //辞書draftDataに入れる(ブロックがgetした新入生) →get_dictと同じ
   });
-  if (!(val in validMembers)) {
-  errors.push(`No.${val} は登録された新入寮生ではありません`);
-  }
+  // tempValuesをループしてvalidMembersに存在するかチェック
+  tempValues.forEach(({ val }) => {
+    const numVal = parseInt(val, 10);
+    if (!(val in validMembers)) {
+      errors.push(`No.${val} は登録された新入寮生ではありません`);
+    }
+  });
+
   if (errors.length > 0) {  //errorsにエラーメッセージが入っていれば
     alert(errors.join("\n")); //エラーをアラート表示
     return; // エラーがあるので確定しないで、もう一回この試行をする
