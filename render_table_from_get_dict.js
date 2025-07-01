@@ -18,11 +18,17 @@ function renderTableFromGetDict(getDict) {  //python側から送られてきたg
             confirmedMembers.add(values[i]);
 
           } else {  //あるブロックが獲得した新入寮生の数がi未満だったら
-            const input = document.createElement("input");  //inputタグをもつ＝入力受付中のHTML要素を作製
-            input.type = "number";  //この要素はnumberタグをもち
-            input.placeholder = `${block}[${i}]`; //inputの中身はblock:iと表示される
-            input.addEventListener("input", assignColors);  //inputに対してassignColorsを動かす
-            cell.appendChild(input);  //cellにこの要素を入れる
+           const span = document.createElement("span");
+            span.textContent = "";  // 初期値は空
+            span.classList.add("editable-span");  // スタイル調整用クラス
+
+            // クリック時にナンバーピッカーを起動
+            span.addEventListener("click", () => {
+              currentTargetSpan = span;  // グローバル変数で対象を保持
+              showNumberPicker(span);    // ナンバーピッカーを起動（位置も調整）
+            });
+
+            cell.appendChild(span);
           }
         }
       });

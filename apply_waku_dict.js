@@ -32,12 +32,20 @@ function applyWakuDict(wakuDict) {
         span.textContent = confirmedValues[i];
         cell.appendChild(span);
       } else if (inputsAdded < targetInputCount) {
-        // input を追加
-        const input = document.createElement("input");
-        input.type = "number";
-        input.placeholder = `${block}[${i}]`;
-        input.addEventListener("input", assignColors);
-        cell.appendChild(input);
+       
+        // input の代わりに span を生成
+        const span = document.createElement("span");
+        span.textContent = "";  // 初期値は空
+        span.classList.add("editable-span");  // スタイル調整用クラス
+
+        // クリック時にナンバーピッカーを起動
+        span.addEventListener("click", () => {
+          currentTargetSpan = span;  // グローバル変数で対象を保持
+          showNumberPicker(span);    // ナンバーピッカーを起動（位置も調整）
+        });
+
+        cell.appendChild(span);
+
         inputsAdded++;
       } else {
         // 残りは空の span

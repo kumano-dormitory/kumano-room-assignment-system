@@ -178,3 +178,16 @@ button:hover {
   margin-left: 4px;
   font-size: 0.8em;
 }
+
+#number-picker {
+  display: none; /* 初期状態は非表示 */
+}
+
+
+.editable-span {
+  border: 2px dashed #4a90e2;  /* 枠線で目印 */
+  background-color: #e8f4ff;   /* 薄い青背景 */
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}

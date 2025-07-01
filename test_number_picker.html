@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ナンバーピッカー テスト</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    td {
+      width: 60px;
+      height: 40px;
+      border: 1px solid #ccc;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    .editable-span {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+    }
+
+    .picker-item {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      margin: 3px;
+      background: #eee;
+      text-align: center;
+      line-height: 30px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #number-picker {
+      position: absolute;
+      background: white;
+      border: 1px solid #aaa;
+      padding: 10px;
+      display: none;
+      z-index: 100;
+    }
+
+    .highlighted {
+      background-color: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <h2>ナンバーピッカー テスト</h2>
+  <table>
+    <tr>
+      <td><span class="editable-span"></span></td>
+      <td><span class="editable-span"></span></td>
+      <td><span class="editable-span"></span></td>
+    </tr>
+  </table>
+
+  <div id="number-picker"></div>
+
+  <script>
+    let currentTargetSpan = null;
+
+    function showNumberPicker(targetElement) {
+      const picker = document.getElementById("number-picker");
+      picker.innerHTML = ""; // 初期化
+
+      for (let i = 0; i <= 20; i++) {
+        const item = document.createElement("div");
+        item.textContent = i;
+        item.className = "picker-item";
+        item.addEventListener("click", () => {
+          if (currentTargetSpan) {
+            currentTargetSpan.textContent = i;
+            currentTargetSpan.classList.add("highlighted");
+          }
+          picker.style.display = "none";
+        });
+        picker.appendChild(item);
+      }
+
+      const rect = targetElement.getBoundingClientRect();
+      picker.style.top = `${window.scrollY + rect.bottom}px`;
+      picker.style.left = `${window.scrollX + rect.left}px`;
+      picker.style.display = "block";
+    }
+
+    document.querySelectorAll(".editable-span").forEach(span => {
+      span.addEventListener("click", () => {
+        currentTargetSpan = span;
+        showNumberPicker(span);
+      });
+    });
+
+    // クリック外しでピッカー非表示
+    document.addEventListener("click", e => {
+      const picker = document.getElementById("number-picker");
+      if (!picker.contains(e.target) && !e.target.classList.contains("editable-span")) {
+        picker.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

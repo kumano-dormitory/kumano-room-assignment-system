@@ -1,70 +1,71 @@
-function confirmInputs() {  //確定ボタンが押されたときに動かされる関数
-  const inputs = document.querySelectorAll("td input"); //input要素をもつcellの要素を全て取得
-  const tempValues = [];  //空配列tempValuesを作製
-  const errors = [];  //空配列errorsを作製
-
-  for (const input of inputs) { //input要素をもつcellの要素１つずつに対して
-    const val = input.value.trim(); 
-    if (val === "") continue; //valが空だったら今回はおわり
-
-    const num = parseInt(val, 10);  //valを10進数の数値に変更→numとする
-    if (isNaN(num) || num < 0 || num > 99) {  //numが数値でなかったり、0未満, 100以上なら
-      errors.push(`不正な番号: ${val}（0〜99）`); //配列errorsにエラーメッセージを入れる
-      continue; //今回は終わり
+function rebuildConfirmedMembers() {
+  confirmedMembers.clear();
+  document.querySelectorAll("td span.confirmed-span").forEach(span => {
+    const val = span.textContent.trim();
+    const num = parseInt(val, 10);
+    if (!isNaN(num)) {
+      confirmedMembers.add(num);
     }
-
-    if (confirmedMembers.has(num)) {  //numがすでに確定済みリストにあれば
-      errors.push(`No.${num} はすでに確定済みです`);  //配列errorsにエラーメッセージを入れる
-      continue; //今回は終わり
-    }
-
-       if (!(num in validMembers)) {
-      errors.push(`No.${num} は登録された新入寮生ではありません`);
-      continue;
-    }
-
-    tempValues.push({ input, val });
-  }
-
-  if (errors.length > 0) {  //errorsにエラーメッセージが入っていれば
-    alert(errors.join("\n")); //エラーをアラート表示
-    return; // エラーがあるので確定しないで、もう一回この試行をする
-  }
-
-  // spanに確定
-  tempValues.forEach(({ input, val }) => {  
-    const span = document.createElement("span");  //spanタグをもつ要素作製
-    span.textContent = val;   //span要素にvalをテキストとして追加
-    const parent = input.parentNode;  
-    parent.removeChild(input);  //inputタグを取って
-    parent.appendChild(span);   //spanタグを追加 →入力受付から確定にする
   });
-
-  // 巡目更新
-  document.getElementById("round").textContent =  //roundタグを持つ要素を探してきて、そのテキストを
-    parseInt(document.getElementById("round").textContent) + 1; //もとあるそのテキストを+1したものに更新
-
-  assignColors(); //着色処理
-
-  // 指名データを収集して送信
-  const draftData = {}; //リストdraftDataをつくる
-  document.querySelectorAll("tbody tr").forEach(row => {  //表の横部分の１つめ一個一個について
-    const block = row.querySelector("th").textContent;  //列の見出しの、テキスト部分を取得→いま扱っているブロック
-    const values = [];  //空配列をvaluesとして取得
-    row.querySelectorAll("td span").forEach(span => { //列についてセルのspan要素を全て取得し、  一つ一つについて
-      const val = span.textContent.trim();  //値を取得
-      if (val !== "") values.push(parseInt(val)); //中の値が空でないならvaluesに入れる  
-    });
-    draftData[block] = values;  //辞書draftDataに入れる(ブロックがgetした新入生) →get_dictと同じ
-  });
-
-
- 
-
-  if (errors.length > 0) {  //errorsにエラーメッセージが入っていれば
-    alert(errors.join("\n")); //エラーをアラート表示
-    return; // エラーがあるので確定しないで、もう一回この試行をする
 }
 
-  sendToServer({ round_data: draftData, winners: {} }); //巡目、getdict, じゃんけん勝者をサーバーに送信 ← この段階では勝者はきまっていないので空
+function confirmSpans() {
+  rebuildConfirmedMembers();  // 最新の確定番号を再構築
+  const errors = [];
+  const draftData = {};
+  const confirmedMembersLocal = new Set();  // 今回入力分の重複も防ぐ
+
+  document.querySelectorAll("tbody tr").forEach(row => {
+    const block = row.querySelector("th").textContent;
+    const values = [];
+
+    row.querySelectorAll("td span").forEach(span => {
+      if (span.classList.contains("confirmed-span")) return;  // 確定済みはスキップ
+
+      const val = span.textContent.trim();
+      if (val === "") return;
+
+      const num = parseInt(val, 10);
+      if (isNaN(num) || num < 0 || num > 99) {
+        errors.push(`不正な番号: ${val}（0〜99）`);
+        return;
+      }
+
+      if (confirmedMembers.has(num)) {
+        errors.push(`No.${num} はすでに確定済みです`);
+        alert(errors.join("\n"));
+        return;
+      }
+
+      if (!(num in validMembers)) {
+        errors.push(`No.${num} は登録された新入寮生ではありません`);
+
+        return;
+      }
+
+      values.push(num);
+      confirmedMembersLocal.add(num);
+    });
+
+    draftData[block] = values;
+  });
+
+  if (errors.length > 0) {
+    alert(errors.join("\n"));
+    return;
+  }
+
+  // 今回入力分を confirmed-span に変更
+  document.querySelectorAll("td span").forEach(span => {
+    if (!span.classList.contains("confirmed-span") && span.textContent.trim() !== "") {
+      span.classList.add("confirmed-span");
+    }
+  });
+
+  // 巡目を進める
+  const roundSpan = document.getElementById("round");
+  roundSpan.textContent = parseInt(roundSpan.textContent, 10) + 1;
+
+  assignColors();
+  sendToServer({ round_data: draftData, winners: {} });
 }

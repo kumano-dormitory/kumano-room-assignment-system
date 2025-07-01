@@ -90,13 +90,13 @@
   </div>
 
 <div id="overlay" style="display:none;">
-  <div id="picker"></div>
+
 </div>
 
 </div>
 
   <br>
-  <button onclick="confirmInputs()">確定</button>
+  <button onclick="confirmSpans()">確定</button>
   <button onclick="resetInputs()">リセット</button>
   <button onclick="saveCurrentState()">状態保存</button>
   <button onclick="restorePreviousState()">やり直し</button>
@@ -143,6 +143,8 @@
     // ==== 初期色反映 ====
     document.addEventListener("DOMContentLoaded", assignColors); //全体に対して
   </script>
+      <!--確定ボタンの処理-->
+  <script src="confirm_input.js"></script>
   <script src="number_picker.js"></script>
   <script src="create_number_picker_cell.js"></script>
     <!--// ==== 表を get_dict に基づいて再描画 ====-->
@@ -165,8 +167,7 @@
 
   <script src="enable_reentry.js"></script>
 
-    <!--確定ボタンの処理-->
-  <script src="confirm_input.js"></script>
+
   <!--<script src="save_current_state.js"></script> -->
   <script src="render_table_from_get_dict.js"></script>
   <!-- 最後に読み込むこと！ -->
@@ -194,6 +195,21 @@
 })();
   </script>
 
-  
+ <div id="number-picker-container" style="display: none; position: absolute; background: white; border: 1px solid #ccc; z-index: 1000;"></div>
+ <!-- ナンバーピッカーUI 
+  <div id="number-picker" style="
+  position: absolute;
+  display: none;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: scroll;
+  width: 100px;
+"></div> -->
+
+<div id="number-picker"></div>
+
 </body>
 </html>
