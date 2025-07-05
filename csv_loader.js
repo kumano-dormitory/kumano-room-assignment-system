@@ -14,7 +14,7 @@ function handleCSVUpload(event) {
         validMembers[num] = name;
       }
     });
-    alert("CSV読み込み完了。新入寮生が " + Object.keys(validMembers).length + " 人登録されました。");
+    //alert("CSV読み込み完了。新入寮生が " + Object.keys(validMembers).length + " 人登録されました。");
     console.log("新入寮生:", validMembers);
     document.getElementById("result-area").textContent = 
   "読み込んだ新入寮生:\n" + 

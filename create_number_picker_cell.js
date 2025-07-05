@@ -11,7 +11,7 @@ function createNumberPickerCell(cell, block, index) {
 
   // クリックでピッカーを開く
   button.addEventListener("click", () => showNumberPicker(input));
-
+  
   cell.appendChild(input);
   cell.appendChild(button);
 }

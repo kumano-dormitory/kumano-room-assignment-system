@@ -1,5 +1,7 @@
 function renderTableFromGetDict(getDict) {  //python側から送られてきたget_dictに対してHTML側の表を更新する
+      latestGetDict = getDict;
       confirmedMembers = new Set(); // ← ここで確定した新入寮生をリセット
+      console.log("latestGetDict:", latestGetDict);
       document.querySelectorAll("tbody tr").forEach(row => {  //tbodyかつtrをもつ要素を全て取得して、行ごとに
         const block = row.querySelector("th").textContent;  //th(見出し)をもつ要素を取得、さらにその中のテキストをblockとする (ブロック名を取得)
         const values = getDict[block] || [];  //getDictに入っているもの、つまり各ブロックが得た新入寮生の配列をvaluesとして取得、なければ空配列を代わりに用いる

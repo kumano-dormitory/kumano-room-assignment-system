@@ -158,7 +158,7 @@ button:hover {
   z-index: 1000;
 }
 #picker {
-  background: white;
+  background: blue;
   padding: 20px;
   border-radius: 10px;
   display: grid;
@@ -167,12 +167,12 @@ button:hover {
 }
 .num-btn {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid red;
   text-align: center;
   cursor: pointer;
 }
 .num-btn:hover {
-  background: #eef;
+  background: yellow;
 }
 .picker-btn {
   margin-left: 4px;

@@ -1,12 +1,16 @@
+let latestGetDict = {};
+
 function rebuildConfirmedMembers() {
   confirmedMembers.clear();
-  document.querySelectorAll("td span.confirmed-span").forEach(span => {
-    const val = span.textContent.trim();
-    const num = parseInt(val, 10);
-    if (!isNaN(num)) {
-      confirmedMembers.add(num);
-    }
-  });
+  for (const block in latestGetDict) {
+    latestGetDict[block].forEach(num => {
+      if (!isNaN(num)) {
+        confirmedMembers.add(num);
+      }
+    });
+  }
+
+  console.log("再構築された confirmedMembers:", Array.from(confirmedMembers));
 }
 
 function confirmSpans() {
@@ -68,4 +72,5 @@ function confirmSpans() {
 
   assignColors();
   sendToServer({ round_data: draftData, winners: {} });
+  rebuildConfirmedMembers();
 }
