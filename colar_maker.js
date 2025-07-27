@@ -1,6 +1,6 @@
  // 色割り当て関数
  function assignColors() {
-    const elements = document.querySelectorAll("td input, td span");  
+    const elements = document.querySelectorAll("td editable-span");  
     const valueMap = {};
     const colorMap = {};
     let colorIndex = 0;

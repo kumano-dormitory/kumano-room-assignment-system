@@ -1,86 +1,57 @@
-let latestGetDict = {};
+function confirmInputs(){
 
-function rebuildConfirmedMembers() {
-  confirmedMembers.clear();
-  for (const block in latestGetDict) {
-    latestGetDict[block].forEach(num => {
-      if (!isNaN(num)) {
-        confirmedMembers.add(num);
-      }
-    });
-  }
+    const errors = [];
+    const draftData = {};
+    const confirmedValues = new Set();
 
-  console.log("再構築された confirmedMembers:", Array.from(confirmedMembers));
-}
+    for (const block in tableValues){   //　現在すでに確定済みの番号を収集する →　confirmedValues
+        const row = Array.from(document.querySelectorAll("tbody tr"))
+            .find(tr => tr.querySelector("th")?.textContent === block);
+        if (!row) return;
+        const spans = row.querySelectorAll(`td span`);
 
-function confirmSpans() {
-  rebuildConfirmedMembers();  // 最新の確定番号を再構築
-  const errors = [];
-  const draftData = {};
-  const confirmedMembersLocal = new Set();  // 今回入力分の重複も防ぐ
-
-  document.querySelectorAll("tbody tr").forEach(row => {
-    const block = row.querySelector("th").textContent;
-    const values = [];
-
-    row.querySelectorAll("td span").forEach(span => {
-      if (!span.classList.contains("editable-span")) return;  // 確定済みはスキップ
-
-      else {
-        const val = span.textContent.trim();
-        if (val === "") return;
-
-        const num = parseInt(val, 10);
-        if (isNaN(num) || num < 0 || num > 99) {
-          errors.push(`不正な番号: ${val}（0〜99）`);
-          return;
+        for (let i = 0; i< 6; i++){
+            const span = spans[i];
+            if(span.className == "confirmed-span"){
+                confirmedValues.add(tableValues[block][i]);
+            }
         }
-
-        if (confirmedMembers.has(num)) {
-          errors.push(`No.${num}はすでに確定済み`);
-          return;
-        }
-
-
-
-        if (!(num in validMembers)) {
-          errors.push(`No.${num} は登録された新入寮生ではありません`);
-
-          return;
-        }
-      
-
-      values.push(num);
-      confirmedMembersLocal.add(num);}
-    });
-
-    if (values.length > 0) {
-    draftData[block] = values;
-  }
-  });
-
-  if (errors.length > 0) {
-    alert(errors.join("\n"));
-    return;
-  }
-
-  // 今回入力分を confirmed-span に変更
-  document.querySelectorAll("td span").forEach(span => {
-    if (!span.classList.contains("confirmed-span") && span.textContent.trim() !== "") {
-      span.classList.add("confirmed-span");
     }
-  });
 
-  // 巡目を進める
-  const roundSpan = document.getElementById("round");
-  roundSpan.textContent = parseInt(roundSpan.textContent, 10) + 1;
-  
-  const mergedData = { ...latestGetDict };
-  for (const block in draftData) {
-    mergedData[block] = draftData[block];
-  }
+    console.log("確定済み番号=",confirmedValues);
 
-  assignColors();
-  sendToServer({ round_data: mergedData, winners: {} });
-  rebuildConfirmedMembers();
+    for (const block in tableValues){
+        const row = Array.from(document.querySelectorAll("tbody tr"))
+            .find(tr => tr.querySelector("th")?.textContent === block);
+        if (!row) return;
+        const spans = row.querySelectorAll(`td span`);
+        draftData[block] = [];
+
+        for (let i = 0; i < 6; i++){
+            const span = spans[i];
+            if(span.className == "editable-span"){
+                const valu = tableValues[block][i];
+                if(confirmedValues.has(valu)){
+                    errors.push(`No.${valu}は確定済みです`);
+                    alert(errors.join("\n"));
+                    return;
+                }
+                if(!(valu in validMembers)){
+                    errors.push(`${valu}番は選べません`);
+                    alert(errors.join("\n"));
+                    return;
+                }
+            
+                if(valu){
+                    draftData[block].push(valu);
+                   
+
+                }
+
+            }
+        }
+    }
+
+    sendToServer({round_data: draftData, winners:{}});
+    console.log("ねむい");
 }

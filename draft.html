@@ -96,7 +96,7 @@
 </div>
 
   <br>
-  <button onclick="confirmSpans()">指名終了</button>
+  <button onclick="confirmInputs()">指名終了</button>
   <button onclick="resetInputs()">リセット</button>
   <button onclick="saveCurrentState()">状態保存</button>
   <button onclick="restorePreviousState()">やり直し</button>
@@ -109,8 +109,7 @@
 <script>
   let backupState = {
     round: 1,
-    inputs: {},
-    wakuDict: {}
+    inputs: {}
   };
 </script>
 
@@ -137,7 +136,7 @@
       });
 
       document.getElementById("round").textContent = "1"; //roundタグの要素の中身を「1」とする
-      assignColors(); //「着色」する
+     // assignColors(); //「着色」する
     }
 
     // ==== 初期色反映 ====

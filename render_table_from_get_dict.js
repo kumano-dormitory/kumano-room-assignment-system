@@ -1,39 +1,36 @@
-function renderTableFromGetDict(getDict) {  //python側から送られてきたget_dictに対してHTML側の表を更新する
-      latestGetDict = getDict;
-      confirmedMembers = new Set(); // ← ここで確定した新入寮生をリセット
-      console.log("latestGetDict:", latestGetDict);
-      document.querySelectorAll("tbody tr").forEach(row => {  //tbodyかつtrをもつ要素を全て取得して、行ごとに
-        const block = row.querySelector("th").textContent;  //th(見出し)をもつ要素を取得、さらにその中のテキストをblockとする (ブロック名を取得)
-        const values = getDict[block] || [];  //getDictに入っているもの、つまり各ブロックが得た新入寮生の配列をvaluesとして取得、なければ空配列を代わりに用いる
-        const cells = row.querySelectorAll("td"); //ある１つの縦について、各セルの要素を全て取得
+// 新しいrender_table_from_get_dict.jsです
+function renderTableFromGetDict(getDict){
+    console.log("getDict =", getDict);
+    for (const block in getDict){
+        const row = Array.from(document.querySelectorAll("tbody tr"))
+            .find(tr => tr.querySelector("th")?.textContent === block);
+        if (!row) return;
+        const spans = row.querySelectorAll(`td span`);
 
-        for (let i = 0; i < cells.length; i++) {
-          const cell = cells[i];
-          cell.innerHTML = ""; // 初期化
 
-          if (i < values.length) {  //あるブロックが獲得した新入寮生の数にiが入っていたら (そのセルに獲得した新入寮生が入るなら)
-            const span = document.createElement("span");  //span(入力済=確定)タグをもつHTML要素を作製
-            span.textContent = values[i]; //spanを持った、「あるブロックのi番目の確定した新入寮生番号」要素をつくる
-            cell.appendChild(span); //セルにこの要素を入れる  →あるブロックのi番目のセルに、あるブロックのi番目の確定した新入寮生をspanとして入れる
-
-             // ✅ 確定済み番号として登録
-            confirmedMembers.add(values[i]);
-
-          } else {  //あるブロックが獲得した新入寮生の数がi未満だったら
-           const span = document.createElement("span");
-            span.textContent = "";  // 初期値は空
-            span.classList.add("editable-span");  // スタイル調整用クラス
-
-            // クリック時にナンバーピッカーを起動
-            span.addEventListener("click", () => {
-              currentTargetSpan = span;  // グローバル変数で対象を保持
-              showNumberPicker(span);    // ナンバーピッカーを起動（位置も調整）
-            });
-
-            cell.appendChild(span);
-          }
+        
+        for (let i = 0; i < tableState[block].length; i++){
+            if(tableState[block][i] == "confirmed") continue;
+            tableState[block][i] = "";
+            tableValues[block][i] = "";
+            const span = spans[i];
+            const valu = getDict[block][i];
+            if (valu){
+                tableValues[block][i] = getDict[block][i];
+                tableState[block][i] = "confirmed";
+                span.className = "confirmed-span";
+                console.log("confirmedに切り替えました",block,i);
+                span.onclick = null;
+            }else{
+                tableValues[block][i] = "";
+                tableState[block][i] = "normal";
+                span.className = "normal-span";
+                console.log("normalに切りかえました",block,i);
+                span.onclick = null;
+            }
         }
-      });
-
-      assignColors(); //assignColorsする
+        
     }
+
+    
+}

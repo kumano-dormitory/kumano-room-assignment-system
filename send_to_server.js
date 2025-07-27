@@ -20,7 +20,9 @@ function sendToServer(data) {
       if (json.losers && Object.keys(json.losers).length > 0) {
         alert("じゃんけん敗者による再入力フェーズです。該当ブロックが再度入力してください。");
         console.log("再入力対象:", json.losers);
+        console.log("renderTableいまからうごきます");
         renderTableFromGetDict(json.get_dict);
+        console.log("renderTableうごいた");
         enableReentry(json.losers);
         
         return;  // 再入力待ちなのでこれ以上処理しない

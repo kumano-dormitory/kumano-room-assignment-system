@@ -1,7 +1,15 @@
+window.tableState = {};
+window.tableValues = {};
+window.wakuDict = {};
 document.addEventListener("DOMContentLoaded", () => {
   const blockNames = ["A1", "A2", "A3", "A4", "B12", "B3", "B4", "C12", "C34"];
   const columnCount = 6;
-  const inputRows = document.getElementById("input-rows");
+  const spanrows = document.getElementById("input-rows");
+
+  blockNames.forEach(block => {
+    window.tableState[block] = Array(columnCount).fill("normal");
+    window.tableValues[block] = Array(columnCount).fill(null);
+  })
 
   blockNames.forEach(name => {
     const tr = document.createElement("tr");
@@ -11,18 +19,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (let i = 0; i < columnCount; i++) {
       const td = document.createElement("td");
-      const input = document.createElement("input");
-      input.type = "number";
-      input.placeholder = `${name}[${i}]`;
-      input.min = 0;
-      input.max = 99;
-      input.addEventListener("input", assignColors);
-      td.appendChild(input);
+      td.dataset.block = name;
+      td.dataset.index = i;
+
+      const span = document.createElement("span");
+      span.dataset.block = name;
+      span.dataset.index = i;
+
+
+
+      // 初期状態は空
+      span.textContent = "";
+      span.className = "normal-span";
+
+      // 必要なら onclick を後から追加
+      // span.onclick = () => { ... };
+
+      td.appendChild(span);
       tr.appendChild(td);
     }
 
-    inputRows.appendChild(tr);
+    spanrows.appendChild(tr);
   });
 
-  assignColors();
+  assignColors();  // 最初の色づけ処理など
 });

@@ -41,7 +41,7 @@ h2, h3 {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+ /* background: #fff; */
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
@@ -146,7 +146,7 @@ button:hover {
   white-space: pre-wrap;
   font-size: 0.85em;
 }
-
+      
 #overlay {
   position: fixed;
   top: 0; left: 0;
@@ -158,7 +158,7 @@ button:hover {
   z-index: 1000;
 }
 #picker {
-  background: blue;
+  background: brown;
   padding: 20px;
   border-radius: 10px;
   display: grid;
@@ -166,8 +166,11 @@ button:hover {
   gap: 10px;
 }
 .num-btn {
-  padding: 10px;
-  border: 1px solid red;
+  padding: 2px;
+  height: 20px;
+  width: 25px;
+  background-color: rgba(red, 0.8);
+  border: 3px solid red;
   text-align: center;
   cursor: pointer;
 }
@@ -183,11 +186,28 @@ button:hover {
   display: none; /* 初期状態は非表示 */
 }
 
-
+/* 編集可能な span を青枠で強調 */
 .editable-span {
-  border: 2px dashed #4a90e2;  /* 枠線で目印 */
-  background-color: #e8f4ff;   /* 薄い青背景 */
-  padding: 2px 4px;
+  display: inline-block;
+  width: 40px;
+  height: 30px;
+  border: 2px solid blue;
+  background-color: rgba(blue, 0.8);
+  border-radius: 2px;
+  padding: 2px;
   cursor: pointer;
-  border-radius: 4px;
+}
+
+/* 確定済みはグレーアウトなど、任意に */
+.confirmed-span {
+  background-color: greenyellow;
+  color: #333;
+  cursor: default;
+}
+
+/* 通常 span は何もしない（或いは薄い線） */
+.normal-span {
+  display: inline-block;
+  background-color: purple;
+  border: purple;
 }
