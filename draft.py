@@ -9,6 +9,11 @@ def index():
 def serve_js(filename):
     return static_file(filename, root='.')
 
+@route('/static/<filepath:path>')
+def serve_static(filepath):
+    return static_file(filepath, root='./static')
+
+
 @route('/<filename:re:.*\.css>')
 def serve_css(filename):
     return static_file(filename, root='.')

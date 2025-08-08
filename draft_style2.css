@@ -211,3 +211,25 @@ button:hover {
   background-color: purple;
   border: purple;
 }
+  .block-choice {
+    padding: 5px 10px;
+    margin: 5px;
+    border: 1px solid #aaa;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
+
+  .block-selected {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+    transform: scale(1.2);
+  }
+
+  .block-unselected {
+    background-color: #ccc;
+    color: #666;
+    opacity: 0.6;
+  }

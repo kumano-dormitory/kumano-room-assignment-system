@@ -2,7 +2,11 @@ function applyWakuDict(){
     for (const block in tableState){
         let editableCount = 0;
         
+        const roundIdx = window.currentRound - 1;
+        window.wakuDict[block] = (roundSlotsDict[block]?.[roundIdx] || 0);
+
         const maxEditable = wakuDict[block] || 0;
+
         console.log("wakuDict=>",wakuDict);
         console.log("maxEditable=",block,maxEditable);
         const row = Array.from(document.querySelectorAll("tbody tr"))
@@ -32,7 +36,7 @@ function applyWakuDict(){
                 const span = spans[i];
              //   console.log("editablecount=",editableCount);
                 span.className = "normal-span"
-                span.style.border = "2px dashed black";
+         //       span.style.border = "2px dashed black";
                 console.log(block,i,"normal");
                 tableValues[block][i] = "";
                 span.onclick = null;
@@ -40,4 +44,5 @@ function applyWakuDict(){
             }
         }
     }
+    statusInput();
 }

@@ -1,10 +1,13 @@
 function enableReentry(losers) {
+    window.draftStatus = "reEntry";
+    updateStatusLabel();
   // const wakuDict = {};
   console.log("losers=>",losers);
   for (const block in losers) {
     //wakuDict[block] = losers[block]; // 負けた回数が指名数になる
   }
   console.log("再入力可能枠:",losers);
+  assignColors();
   for (const block in tableState){
     
         let editableCount2 = 0;
@@ -30,6 +33,7 @@ function enableReentry(losers) {
                 tableValues[block][i] = "";
                 currentTargetSpan = span;
                 currentTargetSpan.textContent = tableValues[block][i];
+                assignColors();
                 editableCount2++;
                 console.log("editablecount2=",editableCount2);
                 span.onclick = () => {
@@ -41,7 +45,7 @@ function enableReentry(losers) {
                 const span = spans[i];
                 console.log("editablecount2=",editableCount2);
                 span.className = "normal-span"
-                span.style.border = "2px dashed black";
+           //     span.style.border = "2px dashed black";
                 console.log(block,i,"normal");
                 tableValues[block][i] = "";
                 span.onclick = null;
@@ -50,5 +54,8 @@ function enableReentry(losers) {
         }
     }
   }
+  
+
+
   
 

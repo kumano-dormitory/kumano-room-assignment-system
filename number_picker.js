@@ -10,8 +10,8 @@
       // rebuildConfirmedMembers();
 
       for (const validNumber of Object.keys(validMembers)
-            .map(n => parseInt(n, 10))){
-     //       .filter(n => !confirmedMembers.has(n))) {
+            .map(n => parseInt(n, 10))
+            .filter(n => !Object.values(totalGetDict).flat().includes(n))) {
             const item = document.createElement("button");
             item.textContent = validNumber;
             item.className = "picker-item";

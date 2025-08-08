@@ -8,6 +8,7 @@
 <body>
   <h2>部屋決めドラフト</h2>
   <p>巡目: <span id="round">1</span></p> <!--巡目の数字にroundタグ付けて管理-->
+  <p>状態: <span id="status"></span></p>
   <section id="slot-settings"><!--各ブロックの枠数を決定する部分-->
     
   <form id="slots-form">
@@ -50,17 +51,29 @@
           <span class="block-name">C34</span>
           <input type="number" name="C34" min="0" value="0">
         </label>
-        
-      </div>
-      <button type="button" onclick="startDraft()">ドラフト開始</button> <!--クリックしたらstartDraftが動くボタンを作る-->
+
+        </div>
+      <button type="button" id="start-button" onclick="startDraft()">ドラフト開始</button> <!--クリックしたらstartDraftが動くボタンを作る-->
     </fieldset>
   </form>
 </section>
+<script>
+  document.getElementById("slot-settings").style.display = "none";
+</script>
 <section id="csv-upload-section">
-  <fieldset>
+  <fieldset id="csv-upload-member">
     <legend>新入寮生CSV読み込み</legend>
     <label for="csv-upload">CSVファイルを選択してください：</label>
     <input type="file" id="csv-upload" accept=".csv" onchange="handleCSVUpload(event)">
+  </fieldset>
+  <fieldset id="csv-upload-waku">
+    <legend>枠数CSV読み込み</legend>
+    <label for="csv-upload">CSVファイルを選択してください：</label>
+    <input type="file" id="csv-upload" accept=".csv" onchange="handleCSVUploadWaku(event)">
+  </fieldset>
+  <fieldset>
+    <legend>開発用CSV読み込み</legend>
+    <button id="dev-fetch-button">開発用インポート</button>
   </fieldset>
 </section>
 
@@ -92,14 +105,20 @@
 <div id="overlay" style="display:none;">
 
 </div>
+<div id="conflict-modal" style="display:none; position:fixed; top:10%; left:10%; background:white; border:1px solid gray; padding:20px; z-index:1000">
+  <h3>競合の処理</h3>
+  <div id="conflict-form"></div>
+  <button id="conflict-submit">確定</button>
+</div>
 
 </div>
 
   <br>
-  <button onclick="confirmInputs()">指名終了</button>
-  <button onclick="resetInputs()">リセット</button>
+  <button id="confirm-button" onclick="confirmInputs()">指名終了</button>
+ <!-- <button id="reset-button" onclick="resetInputs()">リセット</button>
   <button onclick="saveCurrentState()">状態保存</button>
-  <button onclick="restorePreviousState()">やり直し</button>
+  <button id="yarinaoshi" onclick="restorePreviousState()">やり直し</button> -->
+  <button id="next-round" onclick="goToNextRound()">次のラウンドへ</button>
 
 <!-- <input type="file" id="csv-upload" accept=".csv">-->
 <!-- <button onclick="handleCSVImport()">CSV読み込み</button> -->
@@ -148,9 +167,10 @@
   <script src="create_number_picker_cell.js"></script>
     <!--// ==== 表を get_dict に基づいて再描画 ====-->
   <script src="render_table_from_get_dict.js"></script>  
-
+  <script src="go_next_round.js"></script>
   <script src="import_csv.js"></script>
   <script src="csv_loader.js"></script>
+  <script src="csv_waku_import.js"></script>
   <script src="apply_waku_dict.js"></script> 
 
   <script src="start_draft.js"></script> 
@@ -160,7 +180,7 @@
 
     <!--じゃんけん勝者処理-->
   <script src="handle_conflicts.js"></script>
-
+  <script src="merge_getDict.js"></script>
     <!--サーバーへの情報送信-->
   <script src="send_to_server.js"></script>
 
@@ -171,6 +191,7 @@
   <script src="render_table_from_get_dict.js"></script>
   <!-- 最後に読み込むこと！ -->
   <script src="init_table.js"></script>
+  <script src="draftStatus.js"></script>
 
   <script>
     (function () {

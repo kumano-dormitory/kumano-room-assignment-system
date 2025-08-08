@@ -10,7 +10,7 @@ function confirmInputs(){
         if (!row) return;
         const spans = row.querySelectorAll(`td span`);
 
-        for (let i = 0; i< 6; i++){
+        for (let i = 0; i< window.columnCount[block]; i++){
             const span = spans[i];
             if(span.className == "confirmed-span"){
                 confirmedValues.add(tableValues[block][i]);
@@ -27,7 +27,7 @@ function confirmInputs(){
         const spans = row.querySelectorAll(`td span`);
         draftData[block] = [];
 
-        for (let i = 0; i < 6; i++){
+        for (let i = 0; i < window.columnCount[block]; i++){
             const span = spans[i];
             if(span.className == "editable-span"){
                 const valu = tableValues[block][i];
@@ -51,7 +51,8 @@ function confirmInputs(){
             }
         }
     }
-
+    statusDone();
+    updateStatusLabel();
     sendToServer({round_data: draftData, winners:{}});
     console.log("ねむい");
 }
