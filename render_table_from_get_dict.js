@@ -1,39 +1,44 @@
-// 新しいrender_table_from_get_dict.jsです
 function renderTableFromGetDict(getDict){
-    console.log("totalgetDict =", totalGetDict);
-    mergeIntoTotal(getDict);
-    console.log("totalgetDict =", totalGetDict);
-    
-    for (const block in totalGetDict){
-        const row = Array.from(document.querySelectorAll("tbody tr"))
-            .find(tr => tr.querySelector("th")?.textContent === block);
-        if (!row) continue;
-        const spans = row.querySelectorAll(`td span`);
+  console.log("totalgetDict(before) =", totalGetDict);
+  mergeIntoTotal(getDict);
+  console.log("totalgetDict(after)  =", totalGetDict);
 
-    // 表と内部データを統一する
-        for (let i = 0; i < tableState[block].length; i++){
-            if(tableState[block][i] == "confirmed") continue;
-            tableState[block][i] = "";
-            tableValues[block][i] = "";
-            const span = spans[i];
-            const valu = totalGetDict[block][i];
-            if (valu){
-                tableValues[block][i] = totalGetDict[block][i];
-                tableState[block][i] = "confirmed";
-                span.className = "confirmed-span";
-                span.textContent = tableValues[block][i];
-                console.log("confirmedに切り替えました",block,i);
-                span.onclick = null;
-            }else{
-                tableValues[block][i] = "";
-                tableState[block][i] = "normal";
-                span.className = "normal-span";
-                console.log("normalに切りかえました",block,i);
-                span.onclick = null;
-            }
-        }
-        assignColors();
+  for (const block in totalGetDict){
+    const row = Array.from(document.querySelectorAll("tbody tr"))
+      .find(tr => tr.querySelector("th")?.textContent === block);
+    if (!row) continue;
+
+    const spans = row.querySelectorAll("td span");
+
+    // 1) 値を防御的に整形（重複除去→必要ならソート）
+    const vals = Array.from(new Set(totalGetDict[block])).sort((a,b)=>a-b);
+
+    // 2) 行を全面リセット（表示と内部を揃える）
+    tableValues[block] = tableValues[block] || [];
+    tableState[block]  = tableState[block]  || [];
+
+    for (let i = 0; i < spans.length; i++){
+      const span = spans[i];
+      tableState[block][i]  = "normal";
+      tableValues[block][i] = "";
+      span.className        = "normal-span";
+      span.textContent      = "";
+      span.onclick          = null;
     }
 
-    
+    // 3) 先頭から confirmed を詰め直す（存在判定は厳密に）
+    for (let i = 0; i < Math.min(vals.length, spans.length); i++){
+      const span = spans[i];
+      const val  = vals[i];
+      if (val !== undefined && val !== null) {
+        tableValues[block][i] = val;
+        tableState[block][i]  = "confirmed";
+        span.className        = "confirmed-span";
+        span.textContent      = val;
+        span.onclick          = null;
+      }
+    }
+  }
+
+  assignColors();
 }
