@@ -30,7 +30,7 @@ function sendToServer(data) {
         console.log("renderTableうごいた");
         enableReentry(json.losers);
         
-        return;  // 再入力待ちなのでこれ以上処理しない
+        return;  // 再入力待ち
       }
 
       // ③ 全て確定 → 表と結果を更新

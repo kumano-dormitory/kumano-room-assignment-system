@@ -1,5 +1,12 @@
+function getRoundWindow(block) {
+  const arr = roundSlotsDict?.[block] || [];
+  const idx = (window.currentRound || 1) - 1;
+  const start = arr.slice(0, idx).reduce((a, b) => a + (b || 0), 0);
+  const size  = arr[idx] || 0;
+  return { start, end: start + size }; // [start, end)
+}
+
 function enableReentry(losers) {
-  // reEntry中はapplyWakuDictを呼ばない前提
   window.draftStatus = "reEntry";
   updateStatusLabel?.();
 
@@ -10,44 +17,43 @@ function enableReentry(losers) {
 
     const spans = row.querySelectorAll("td span");
 
-    // 念のため配列長をDOMに合わせる
+    // DOMに長さを合わせる（安全策）
     tableValues[block] = tableValues[block] || [];
     tableState[block]  = tableState[block]  || [];
     while (tableValues[block].length < spans.length) tableValues[block].push("");
     while (tableState[block].length  < spans.length) tableState[block].push("normal");
 
-    // そのラウンドで必要な総枠数（= wakuDict[block]）から、確定済みの数を引く
-    const allowed = (window.wakuDict?.[block] ?? 0);
+    // この巡の“窓”
+    const { start, end } = getRoundWindow(block);
+    const endClamped = Math.min(end, spans.length);
+    const allowed = Math.max(0, endClamped - start);
 
-    const confirmedCount =
-      [...spans].filter((sp, i) => tableState[block][i] === "confirmed").length;
+    // ★ 窓の中だけでカウントを定義してから使う
+    let confirmedCount = 0;
+    let editableCount  = 0;
+    for (let i = start; i < endClamped; i++) {
+      if (tableState[block][i] === "confirmed") confirmedCount++;
+      else if (tableState[block][i] === "editable") editableCount++;
+    }
 
-    // 既にeditableな数（直前のreEntryで残っている分など）
-    const editableCount =
-      [...spans].filter((sp, i) => tableState[block][i] === "editable").length;
-
-    // この時点で必要な追加editable数 = 許容量 - confirmed - 既存editable
     let needed = Math.max(0, allowed - confirmedCount - editableCount);
 
-    // normalセルのうち、needed個だけeditableにしていく
-    for (let i = 0; i < spans.length && needed > 0; i++) {
+    // 窓の normal を needed 個だけ editable に
+    for (let i = start; i < endClamped && needed > 0; i++) {
       if (tableState[block][i] !== "normal") continue;
       const span = spans[i];
-
       tableState[block][i]  = "editable";
-      tableValues[block][i] = "";            // 入力待ち
+      tableValues[block][i] = "";
       span.className        = "editable-span";
-      span.textContent      = "";            // 見た目も初期化
-      span.onclick          = () => {
-        currentTargetSpan = span;
-        showNumberPicker(span);
-      };
-
+      span.textContent      = "";
+      span.onclick          = () => { currentTargetSpan = span; showNumberPicker(span); };
       needed--;
     }
 
-    // デバッグ：不変条件をログ
-    const afterEditable = [...spans].filter((sp, i) => tableState[block][i] === "editable").length;
-    console.log(`[reEntry] ${block}: allowed=${allowed}, confirmed=${confirmedCount}, editable=${afterEditable}`);
+    // デバッグログ（未定義変数を使わない）
+    const afterEditable = [...spans].slice(start, endClamped)
+      .filter((_, k) => tableState[block][start + k] === "editable").length;
+
+    console.log(`[reEntry] blk=${block} round=${window.currentRound} window=[${start},${endClamped}) allowed=${allowed} confirmed=${confirmedCount} editable=${afterEditable}`);
   }
 }

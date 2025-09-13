@@ -3,7 +3,6 @@ window.tableValues = {};
 window.wakuDict = {};
 window.firstWakuDict = {};
 window.secondWakuDict = {};
-// グローバル累積変数を定義（他のJSと衝突しないように）
 window.totalGetDict = window.totalGetDict || {};
 window.columnCount = {};
 function updateStatusLabel() {
@@ -47,12 +46,11 @@ function initTable() {
 
 
 
-      // 初期状態は空
+      // 初期化
       span.textContent = "";
       span.className = "normal-span";
 
-      // 必要なら onclick を後から追加
-      // span.onclick = () => { ... };
+      
 
       td.appendChild(span);
       tr.appendChild(td);
@@ -61,7 +59,7 @@ function initTable() {
     spanrows.appendChild(tr);
   });
 
-  assignColors();  // 最初の色づけ処理など
+  assignColors();  
 };
 document.addEventListener("DOMContentLoaded", () => {
   initTable();

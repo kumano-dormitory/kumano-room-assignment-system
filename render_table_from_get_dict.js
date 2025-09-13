@@ -10,10 +10,10 @@ function renderTableFromGetDict(getDict){
 
     const spans = row.querySelectorAll("td span");
 
-    // 1) 値を防御的に整形（重複除去→必要ならソート）
+    // 値のソート
     const vals = Array.from(new Set(totalGetDict[block])).sort((a,b)=>a-b);
 
-    // 2) 行を全面リセット（表示と内部を揃える）
+    // 内部のりせっと
     tableValues[block] = tableValues[block] || [];
     tableState[block]  = tableState[block]  || [];
 
@@ -26,7 +26,7 @@ function renderTableFromGetDict(getDict){
       span.onclick          = null;
     }
 
-    // 3) 先頭から confirmed を詰め直す（存在判定は厳密に）
+    //先頭からconfirmedをアペンドしていく
     for (let i = 0; i < Math.min(vals.length, spans.length); i++){
       const span = spans[i];
       const val  = vals[i];
