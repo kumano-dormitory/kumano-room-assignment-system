@@ -37,6 +37,10 @@ h2, h3 {
   white-space: pre-wrap;
 }
 
+.csv-loader {
+  display: none;
+
+}
 /* === テーブル === */
 table {
   width: 100%;
@@ -145,6 +149,7 @@ button:hover {
   margin-top: 10px;
   white-space: pre-wrap;
   font-size: 0.85em;
+  display: none;
 }
       
 #overlay {

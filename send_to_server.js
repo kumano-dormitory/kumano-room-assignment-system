@@ -35,7 +35,6 @@ function sendToServer(data) {
 
       // ③ 全て確定 → 表と結果を更新
       window.draftStatus = "done";
-      renderTableFromGetDict();
       updateStatusLabel();
       showResults(json);
       renderTableFromGetDict(json.get_dict);

@@ -61,6 +61,7 @@
   document.getElementById("slot-settings").style.display = "none";
 </script>
 <section id="csv-upload-section">
+  <div class="csv-loader">
   <fieldset id="csv-upload-member">
     <legend>新入寮生CSV読み込み</legend>
     <label for="csv-upload">CSVファイルを選択してください：</label>
@@ -71,9 +72,10 @@
     <label for="csv-upload">CSVファイルを選択してください：</label>
     <input type="file" id="csv-upload" accept=".csv" onchange="handleCSVUploadWaku(event)">
   </fieldset>
+  </div>
   <fieldset>
-    <legend>開発用CSV読み込み</legend>
-    <button id="dev-fetch-button">開発用インポート</button>
+    <legend>CSV読み込み</legend>
+    <button id="dev-fetch-button">インポート</button>
   </fieldset>
 </section>
 
@@ -111,13 +113,26 @@
   <button id="conflict-submit">確定</button>
 </div>
 
+
+<div id="result-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:#fff; border:1px solid #ccc; padding:16px; border-radius:12px; min-width:320px; max-width:90vw; max-height:80vh; overflow:auto;">
+    <h3 style="margin-top:0">最終結果</h3>
+    <pre id="final-result" style="white-space:pre-wrap"></pre>
+    <div style="text-align:right; margin-top:12px;">
+      <button id="result-submit">閉じる</button>
+    </div>
+  </div>
+</div>
+
 </div>
 
   <br>
   <button id="confirm-button" onclick="confirmInputs()">指名終了</button>
- <!-- <button id="reset-button" onclick="resetInputs()">リセット</button>
+ <!-- 
+  <button id="reset-button" onclick="resetInputs()">リセット</button>
   <button onclick="saveCurrentState()">状態保存</button>
-  <button id="yarinaoshi" onclick="restorePreviousState()">やり直し</button> -->
+  <button id="yarinaoshi" onclick="restorePreviousState()">やり直し</button>
+  -->
   <button id="next-round" onclick="goToNextRound()">次のラウンドへ</button>
 
 <!-- <input type="file" id="csv-upload" accept=".csv">-->

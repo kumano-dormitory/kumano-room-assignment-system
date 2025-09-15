@@ -17,18 +17,17 @@ function enableReentry(losers) {
 
     const spans = row.querySelectorAll("td span");
 
-    // DOMに長さを合わせる（安全策）
     tableValues[block] = tableValues[block] || [];
     tableState[block]  = tableState[block]  || [];
     while (tableValues[block].length < spans.length) tableValues[block].push("");
     while (tableState[block].length  < spans.length) tableState[block].push("normal");
 
-    // この巡の“窓”
+  
     const { start, end } = getRoundWindow(block);
     const endClamped = Math.min(end, spans.length);
     const allowed = Math.max(0, endClamped - start);
 
-    // ★ 窓の中だけでカウントを定義してから使う
+    
     let confirmedCount = 0;
     let editableCount  = 0;
     for (let i = start; i < endClamped; i++) {
@@ -38,7 +37,7 @@ function enableReentry(losers) {
 
     let needed = Math.max(0, allowed - confirmedCount - editableCount);
 
-    // 窓の normal を needed 個だけ editable に
+    //normal を needed 個だけ editable に
     for (let i = start; i < endClamped && needed > 0; i++) {
       if (tableState[block][i] !== "normal") continue;
       const span = spans[i];
@@ -50,7 +49,7 @@ function enableReentry(losers) {
       needed--;
     }
 
-    // デバッグログ（未定義変数を使わない）
+    //log出力
     const afterEditable = [...spans].slice(start, endClamped)
       .filter((_, k) => tableState[block][start + k] === "editable").length;
 
